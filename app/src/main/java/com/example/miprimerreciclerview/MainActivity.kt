@@ -5,6 +5,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.miprimerreciclerview.databinding.ActivityMainBinding
@@ -16,7 +17,7 @@ class MainActivity : AppCompatActivity() {
     //Defino un objeto del Adapter
     lateinit var miadapter:AdaptadorRecycler
     //Creo la lista de datos
-    var lista_datos= mutableListOf("Mercedes","Bmw","Renault","Opel","Ford")
+    var lista_datos= mutableListOf(Coche("Mercedes"),Coche("Bmw"),Coche("Renault"),Coche("Opel"),Coche("Ford"),Coche("Hyundai"),Coche("Kia"),Coche("Toyota"),Coche("Porche"),Coche("Mercedes"),Coche("Bmw"),Coche("Renault"),Coche("Opel"),Coche("Ford"),Coche("Hyundai"),Coche("Kia"),Coche("Toyota"),Coche("Porche"),Coche("Ford"),Coche("Hyundai"),Coche("Kia"),Coche("Toyota"),Coche("Porche"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,8 +44,23 @@ class MainActivity : AppCompatActivity() {
         //4ºPaso definir manejador del Layout del recycler
         this.mirecycler.layoutManager=LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
 
+        //Añadimos un separador vertical a los elementos del recyclerview
+        val divisor=DividerItemDecoration(this,LinearLayoutManager.VERTICAL)
+        //Le asignamos al recyclerview el itemDecoration
+        this.mirecycler.addItemDecoration(divisor)
+
         //Asignar una referencia del adaptador
-        this.miadapter=AdaptadorRecycler(this.lista_datos)
+        this.miadapter=AdaptadorRecycler(this.lista_datos){
+            posicion->
+
+            lista_datos.get(posicion).seleccionado=!lista_datos.get(posicion).seleccionado
+            //Repinto los elementos
+            miadapter.notifyItemChanged(posicion)
+
+
+        }
+
+
 
         //Vinculo al recycler view el adaptador
         this.mirecycler.adapter=this.miadapter

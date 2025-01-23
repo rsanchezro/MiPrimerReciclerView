@@ -5,8 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.miprimerreciclerview.databinding.ElementoRecyclerBinding
 
-class AdaptadorRecycler(private val datos:List<String>):RecyclerView.Adapter<AdaptadorRecycler.MiViewHolder>() {
+class AdaptadorRecycler(private val datos:List<Coche>,val onClick_item:(Int)->Unit):RecyclerView.Adapter<AdaptadorRecycler.MiViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MiViewHolder {
@@ -25,18 +26,33 @@ class AdaptadorRecycler(private val datos:List<String>):RecyclerView.Adapter<Ada
     override fun onBindViewHolder(holder: MiViewHolder, position: Int) {
         //Vinculo cada una de los elementos visuales (vistas)
         //del holder con los datos
-            holder.render(datos.get(position))
+            holder.render(datos.get(position),position)
+           holder.itemView.setOnClickListener { //seinvoca a algo que viene de fuera
+                onClick_item(position)
+            }
+
 
     }
     //Clase que representa un ViewHolder
     class MiViewHolder( val vista:View):RecyclerView.ViewHolder(vista)
     {
+        //Hacemos el binding dentro del holder
+        private var binding_holder=ElementoRecyclerBinding.bind(vista)
 
         //La propiedad itemview representa la vista individual y
         //tiene la misma referencia que vista
-            fun render(dato:String)
+            fun render(dato:Coche,pos:Int)
             {
-                itemView.findViewById<TextView>(R.id.textView).text=dato
+                binding_holder.textView.text=dato.marca
+                if(dato.seleccionado)
+                {
+                    vista.setBackgroundColor( vista.context.getColor(R.color.gris) )
+                }
+                else
+                {
+                    vista.setBackgroundColor( vista.context.getColor(R.color.white) )
+                }
+
 
             }
     }
